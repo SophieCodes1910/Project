@@ -5,12 +5,11 @@ print("ONE DAY FILM FESTIVAL")
 print("===" * 15)
 
 def menu():
-    def menu():
-        print("1: Make a booking")
-        print("2: Show Availability")
-        print("3: Exit")
-        menu_output = int(input("==> "))
-        return menu_output 
+    print("1: Make a booking")
+    print("2: Show Availability")
+    print("3: Exit")
+    menu_output = int(input("==> "))
+    return menu_output 
 
 def making_a_booking(menu_output):
     if menu_output == 1:
@@ -101,8 +100,11 @@ def booking_details(name, total_tickets, total_popcorn, total_cost):
 
 def main(): # was calling the defs as I wrote the program to ensure it functioned correctly but added the main at the end for organisational purposes
     menu_output =menu()
-    name, booking_info , chosen_time, total_tickets, total_kids, total_popcorn = making_a_booking(menu_output)
-    booking_records(chosen_time, booking_info, total_tickets)
-    total_cost = calculate_cost(chosen_time, total_tickets, total_kids, total_popcorn)
-    booking_details(name, total_tickets, total_popcorn, total_cost)
+    booking_result = making_a_booking(menu_output)
+    if booking_result is not None:
+        name, booking_info, chosen_time, total_tickets,total_kids, total_popcorn = booking_result
+    #name, booking_info , chosen_time, total_tickets, total_kids, total_popcorn = making_a_booking(menu_output)
+        booking_records(chosen_time, booking_info, total_tickets)
+        total_cost = calculate_cost(chosen_time, total_tickets, total_kids, total_popcorn)
+        booking_details(name, total_tickets, total_popcorn, total_cost)
 main()
