@@ -3,7 +3,6 @@
 
 print("ONE DAY FILM FESTIVAL")
 print("===" * 15)
-
 def menu():
     print("1: Make a booking")
     print("2: Show Availability")
@@ -106,18 +105,23 @@ def booking_details(name, total_tickets, total_popcorn, total_cost):
     print(f"Total Cost: €{total_cost}")
 
 def show_availability():
-    print("ONE DAY FILM FESTIVAL - AVAILABILITY")
-    print("===" * 15)
-    with open("BookingNumbers.txt", "r") as data_file:
-        for line in data_file:
-            line_data = line.split(",")
-            time_slot,available_seats,tickets_booked,kids_ticket = line.split(",")
-            available_seats = int(available_seats)
-            if available_seats > 0:
-                print(f"{time_slot} - Available Seats: {available_seats}")
-            else:
-                print(f"{time_slot}: Booked Out")
-                
+    while True:
+        print("ONE DAY FILM FESTIVAL - AVAILABILITY")
+        print("===" * 15)
+        with open("BookingNumbers.txt", "r") as data_file:
+            for line in data_file:
+                line_data = line.split(",")
+                time_slot,available_seats,tickets_booked,kids_ticket = line.split(",")
+                available_seats = int(available_seats)
+                if available_seats > 0:
+                    print(f"{time_slot} - Available Seats: {available_seats}")
+                else:
+                    print(f"{time_slot}: Booked Out")
+        input("Press Return to Continue: ")
+        menu_output = menu() # returns user to menu once finished showing availability and they press return
+        if  menu_output != '2':
+            break
+
 
 def main(): # was calling the defs as I wrote the program to ensure it functioned correctly but added the main at the end for organisational purposes
     menu_output =menu()
