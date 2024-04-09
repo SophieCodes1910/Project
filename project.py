@@ -40,3 +40,36 @@ def making_a_booking(menu_output):
             booking_info.append(total_popcorn)
 
         return name, booking_info , chosen_time, total_tickets, total_kids, total_popcorn
+
+def booking_records(chosen_time, booking_info, total_tickets):
+    max_tickets = {}
+    with open("BookingNumbers.txt", "r") as data_file:
+        for line in data_file:
+            line_data = line.split(",")
+            max_tickets[line_data[0]] = int(line_data[1])
+
+        if chosen_time == 1: 
+            if total_tickets <= max_tickets["AllDayTicket"]:
+                max_tickets["AllDayTicket"] -= total_tickets
+                with open("Allday.txt", "w") as output_file:
+                    for data in booking_info:
+                        print(data, file=output_file)
+        
+        if chosen_time == 2: 
+            if total_tickets <= max_tickets["Morning"]:
+                max_tickets["Morning"] -= total_tickets
+                with open("Morning.txt", "w") as output_file:
+                    for data in booking_info:
+                        print(data, file=output_file)
+        if chosen_time == 3: 
+            if total_tickets <= max_tickets["Afternoon"]:
+                max_tickets["Afternoon"] -= total_tickets
+                with open("Afternoon.txt", "w") as output_file:
+                    for data in booking_info:
+                        print(data, file=output_file)
+        if chosen_time == 4: 
+            if total_tickets <= max_tickets["Evening"]:
+                max_tickets["Evening"] -= total_tickets
+                with open("Evening.txt", "w") as output_file:
+                    for data in booking_info:
+                        print(data, file=output_file)
