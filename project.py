@@ -90,3 +90,19 @@ def calculate_cost(chosen_time, total_tickets, total_kids, total_popcorn):
             total_cost = ticket_cost + popcorn_cost
         
     return total_cost
+
+def booking_details(name, total_tickets, total_popcorn, total_cost):
+    print("Booking Details")
+    print("===" * 15)
+    print(f"Name: {name}")
+    print(f"Number of Tickets: {total_tickets}")
+    print(f"Popcorn: {total_popcorn}")
+    print(f"Total Cost: €{total_cost}")
+
+def main(): # was calling the defs as I wrote the program to ensure it functioned correctly but added the main at the end for organisational purposes
+    menu_output =menu()
+    name, booking_info , chosen_time, total_tickets, total_kids, total_popcorn = making_a_booking(menu_output)
+    booking_records(chosen_time, booking_info, total_tickets)
+    total_cost = calculate_cost(chosen_time, total_tickets, total_kids, total_popcorn)
+    booking_details(name, total_tickets, total_popcorn, total_cost)
+main()
