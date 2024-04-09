@@ -25,3 +25,18 @@ def making_a_booking(menu_output):
         print("3: Afternoon")
         print("4: Evening")
         chosen_time = int(input(" => "))
+
+        total_tickets = int(input("How many people in your group? => "))
+        booking_info.append(total_tickets)
+        total_kids = int(input("How many kids in your group? => "))
+        if total_kids <= total_tickets:
+            booking_info.append(total_kids)
+        else:
+            print("Error: the number of kids is greater than the number of tickets - please select more tickets.")
+
+        popcorn = input("Would you like to include popcorn on arrive Y/N: => ").lower()
+        if popcorn == "y":
+            total_popcorn = int(input("How many portions are required? =>"))
+            booking_info.append(total_popcorn)
+
+        return name, booking_info , chosen_time, total_tickets, total_kids, total_popcorn
