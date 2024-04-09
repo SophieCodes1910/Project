@@ -73,3 +73,20 @@ def booking_records(chosen_time, booking_info, total_tickets):
                 with open("Evening.txt", "w") as output_file:
                     for data in booking_info:
                         print(data, file=output_file)
+
+def calculate_cost(chosen_time, total_tickets, total_kids, total_popcorn):
+    cost = {}
+    with open("costs.txt", "r") as data_file:
+        for line in data_file:
+            line_data = line.split(",")
+            cost[line_data[0]] = float(line_data[1])
+        if chosen_time == 1:
+            ticket_cost = cost["day"] * total_tickets
+            popcorn_cost = cost["popcorn"] * total_popcorn
+            total_cost = ticket_cost + popcorn_cost
+        else:
+            ticket_cost = cost["film"] * total_tickets
+            popcorn_cost = cost["popcorn"] * total_popcorn
+            total_cost = ticket_cost + popcorn_cost
+        
+    return total_cost
