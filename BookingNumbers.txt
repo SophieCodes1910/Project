@@ -1,0 +1,4 @@
+AllDayTicket,20,0,0
+Morning,80,0,0
+Afternoon,100, 0,0
+Evening,120,0,0
