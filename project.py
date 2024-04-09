@@ -16,8 +16,15 @@ def making_a_booking(menu_output):
         booking_info = []
         print("BOOKING")
         print("===" * 15)
-        name = input("Enter your name => ")
-        booking_info.append(name)
+        while True:
+            name = input("Enter your name => ")
+            if len(name) < 3: # validation for if name is less than 3 characters
+                print("Name must be more than 3 characters long.")
+            elif len(name) > 10: # validation for if name is more than 10 characters
+                print("Name cannot be longer than 10 characters.")
+            else:
+                booking_info.append(name)
+                break
         print("Choose the time slot")
         print("1: All Day")
         print("2: Morning")
@@ -98,13 +105,30 @@ def booking_details(name, total_tickets, total_popcorn, total_cost):
     print(f"Popcorn: {total_popcorn}")
     print(f"Total Cost: €{total_cost}")
 
+def show_availability():
+    print("ONE DAY FILM FESTIVAL - AVAILABILITY")
+    print("===" * 15)
+    with open("BookingNumbers.txt", "r") as data_file:
+        for line in data_file:
+            line_data = line.split(",")
+            time_slot,available_seats,tickets_booked,kids_ticket = line.split(",")
+            available_seats = int(available_seats)
+            if available_seats > 0:
+                print(f"{time_slot} - Available Seats: {available_seats}")
+            else:
+                print(f"{time_slot}: Booked Out")
+                
+
 def main(): # was calling the defs as I wrote the program to ensure it functioned correctly but added the main at the end for organisational purposes
     menu_output =menu()
-    booking_result = making_a_booking(menu_output)
-    if booking_result is not None:
-        name, booking_info, chosen_time, total_tickets,total_kids, total_popcorn = booking_result
-    #name, booking_info , chosen_time, total_tickets, total_kids, total_popcorn = making_a_booking(menu_output)
-        booking_records(chosen_time, booking_info, total_tickets)
-        total_cost = calculate_cost(chosen_time, total_tickets, total_kids, total_popcorn)
-        booking_details(name, total_tickets, total_popcorn, total_cost)
+    if menu_output == 1:
+        booking_result = making_a_booking(menu_output)
+        if booking_result is not None:
+            name, booking_info, chosen_time, total_tickets,total_kids, total_popcorn = booking_result
+        #name, booking_info , chosen_time, total_tickets, total_kids, total_popcorn = making_a_booking(menu_output)
+            booking_records(chosen_time, booking_info, total_tickets)
+            total_cost = calculate_cost(chosen_time, total_tickets, total_kids, total_popcorn)
+            booking_details(name, total_tickets, total_popcorn, total_cost)
+    elif menu_output == 2:
+        show_availability()
 main()
