@@ -31,7 +31,7 @@ def making_a_booking(menu_output):
         print("4: Evening")
         chosen_time = int(input(" => "))
 
-        total_tickets = int(input("How many adults in your group? => "))
+        total_tickets = int(input("How many people in your group? => ")) #Amended to calculate total - kids = adults
         booking_info.append(total_tickets)
         total_kids = int(input("How many kids in your group? => "))
         if total_kids <= total_tickets:
@@ -106,7 +106,7 @@ def booking_details(name, total_tickets, total_popcorn, total_cost):
         print(f"Name: {name}")
         print(f"Number of Tickets: {total_tickets}")
         print(f"Popcorn: {total_popcorn}")
-        print(f"Total Cost: €{total_cost}")
+        print(f"Total Cost: €{total_cost}.2f")
         input("Press Return to Continue: ")
         menu_output = menu() # returns user to menu once finished showing availability and they press return
         if  menu_output != '1':
@@ -118,7 +118,7 @@ def show_availability():
         print("===" * 15)
         with open("BookingNumbers.txt", "r") as data_file:
             for line in data_file:
-                line_data = line.split(",")
+                line = line.split(",")
                 time_slot,available_seats,tickets_booked,kids_ticket = line.split(",")
                 available_seats = int(available_seats)
                 if available_seats > 0:
@@ -130,25 +130,55 @@ def show_availability():
         if  menu_output != '2':
             break
 
-def update_booking_numbers():
-    booking_counts = {"Allday": [0,0],"Morning": [0,0],"Afternoon": [0,0], "Evening": [0,0]}
+def update_booking_numbers(available_seats): # amended to simplify and debug
+    time_slot = {}
+    total_seats = {}
+    total_kids = {}
     for filename in ["Allday.txt", "Morning.txt", "Afternoon.txt", "Evening.txt"]:
+        with open(filename, "r") as file:
+            for line in file: 
+                line = line.strip
+                line = line.split(",")
+                time_slot[line[0]] = line[0]
+                total_seats[line[0]] = line[1]
+                total_kids[line[0]] = line[2]
         
-        with open(filename, "r") as file: # count total tickets and kids in the time slots
-            for line in file:
-                booking_info = line.strip().split(",")
-                total_tickets = int(booking_info[1])
-                total_kids = int(booking_info[2]) if len(booking_info) > 2 else 0
-                booking_counts[filename.split(".")[0]][0] += total_tickets
-                booking_counts[filename.split(".")[0]][1] += total_kids
-        
-    with open("BookingNumbers.txt", "w") as file:
-        for time_slot, counts in booking_counts.items():
-            with open(f"{time_slot}.txt","r") as file2:
-                total_seats, total_kids = [int(x) for x in file2.readline().strip.split(",")]
-            remaining_seats = max(0, total_seats - counts[0])
-            remaining_kids_seats = max(0, total_kids - counts[1])
-            file.write(f"{time_slot}, {remaining_seats},{remaining_kids_seats}\n")
+        with open("BookingNumbers.txt", "w") as file:
+            time_slot[line[0]] = line[0]
+            remaining_seats[line[0]] =remaining_seats[line[1]]
+            total_seats[line[0]] = total_seats[line[2]]
+            total_kids[line[0]] = total_kids[line[1]]
+            for time_slot in file:
+                remaining_seats = available_seats - total_seats
+
+            file.write(f"{time_slot}, {remaining_seats},{total_seats}, {total_kids}\n")
+
+def calulate_income():
+    total_tickets = {}
+    time = {}
+    cost = {}
+    with open("BookingNumbers.txt" "r") as data_file:
+        for line in data_file:
+            line_data = line.split(",")
+            time[line_data[0]] = (line_data[0])
+            total_tickets[line_data[0]] = int(line_data[1])
+
+    with open("costs.txt", "r") as cost_data:
+        for line in cost_data:
+            cost_data = line.split(",")
+            time[cost_data[0]] = (cost_data[0])
+            cost[cost_data[0]] = float(cost_data[1])
+
+            total_income = sum(cost)
+
+    
+    
+
+
+    
+
+
+    
 
 
 def main(): # was calling the defs as I wrote the program to ensure it functioned correctly but added the main at the end for organisational purposes
