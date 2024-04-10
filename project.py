@@ -31,7 +31,7 @@ def making_a_booking(menu_output):
         print("4: Evening")
         chosen_time = int(input(" => "))
 
-        total_tickets = int(input("How many people in your group? => "))
+        total_tickets = int(input("How many adults in your group? => "))
         booking_info.append(total_tickets)
         total_kids = int(input("How many kids in your group? => "))
         if total_kids <= total_tickets:
@@ -43,6 +43,8 @@ def making_a_booking(menu_output):
         if popcorn == "y":
             total_popcorn = int(input("How many portions are required? =>"))
             booking_info.append(total_popcorn)
+        else:
+            total_popcorn = 0
 
         return name, booking_info , chosen_time, total_tickets, total_kids, total_popcorn
 
@@ -97,12 +99,18 @@ def calculate_cost(chosen_time, total_tickets, total_kids, total_popcorn):
     return total_cost
 
 def booking_details(name, total_tickets, total_popcorn, total_cost):
-    print("Booking Details")
-    print("===" * 15)
-    print(f"Name: {name}")
-    print(f"Number of Tickets: {total_tickets}")
-    print(f"Popcorn: {total_popcorn}")
-    print(f"Total Cost: €{total_cost}")
+    while True:
+
+        print("Booking Details")
+        print("===" * 15)
+        print(f"Name: {name}")
+        print(f"Number of Tickets: {total_tickets}")
+        print(f"Popcorn: {total_popcorn}")
+        print(f"Total Cost: €{total_cost}")
+        input("Press Return to Continue: ")
+        menu_output = menu() # returns user to menu once finished showing availability and they press return
+        if  menu_output != '1':
+            break
 
 def show_availability():
     while True:
@@ -122,6 +130,26 @@ def show_availability():
         if  menu_output != '2':
             break
 
+def update_booking_numbers():
+    booking_counts = {"Allday": [0,0],"Morning": [0,0],"Afternoon": [0,0], "Evening": [0,0]}
+    for filename in ["Allday.txt", "Morning.txt", "Afternoon.txt", "Evening.txt"]:
+        
+        with open(filename, "r") as file: # count total tickets and kids in the time slots
+            for line in file:
+                booking_info = line.strip().split(",")
+                total_tickets = int(booking_info[1])
+                total_kids = int(booking_info[2]) if len(booking_info) > 2 else 0
+                booking_counts[filename.split(".")[0]][0] += total_tickets
+                booking_counts[filename.split(".")[0]][1] += total_kids
+        
+    with open("BookingNumbers.txt", "w") as file:
+        for time_slot, counts in booking_counts.items():
+            with open(f"{time_slot}.txt","r") as file2:
+                total_seats, total_kids = [int(x) for x in file2.readline().strip.split(",")]
+            remaining_seats = max(0, total_seats - counts[0])
+            remaining_kids_seats = max(0, total_kids - counts[1])
+            file.write(f"{time_slot}, {remaining_seats},{remaining_kids_seats}\n")
+
 
 def main(): # was calling the defs as I wrote the program to ensure it functioned correctly but added the main at the end for organisational purposes
     menu_output =menu()
@@ -129,10 +157,11 @@ def main(): # was calling the defs as I wrote the program to ensure it functione
         booking_result = making_a_booking(menu_output)
         if booking_result is not None:
             name, booking_info, chosen_time, total_tickets,total_kids, total_popcorn = booking_result
-        #name, booking_info , chosen_time, total_tickets, total_kids, total_popcorn = making_a_booking(menu_output)
             booking_records(chosen_time, booking_info, total_tickets)
             total_cost = calculate_cost(chosen_time, total_tickets, total_kids, total_popcorn)
             booking_details(name, total_tickets, total_popcorn, total_cost)
     elif menu_output == 2:
         show_availability()
+    elif menu_output == 3:
+        update_booking_numbers()
 main()
